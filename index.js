@@ -108,6 +108,13 @@ app.use(function (err, req, res, next) {
   res.redirect('/posts');
 });
 
-app.listen(config.port, function () {
-  console.log(`${pkg.name} listening on port ${config.port}`);
-});
+if (module.parent) {
+  // module.parent: 最先引用该模块的模块
+  // 通过 require 方式引入，则导出 app，用于测试
+  module.exports = app;
+} else {
+  // 直接执行 index.js 则监听端口，启动程序
+  app.listen(config.port, function () {
+    console.log(`${pkg.name} listening on port ${config.port}`);
+  });
+}
